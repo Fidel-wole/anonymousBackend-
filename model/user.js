@@ -11,16 +11,6 @@ const anonymousSchema = new Schema({
         type:String,
         required:true
     },
-    messages:{
-      info:[{
-        anonymousId:{
-          type:Schema.Types.ObjectId,
-          ref: "AnonymousType"
-        },
-        receivedMessage:{
-            type:String
-        }
-      }]
-    }
+  
 });
 module.exports = mongoose.model('User', anonymousSchema);

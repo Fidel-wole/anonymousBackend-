@@ -1,6 +1,6 @@
 const User = require('../model/user')
 const bcrypt = require('bcryptjs');
-
+const jwt = require('jsonwebtoken')
 
 exports.registerUser = (req, res, next)=>{
 const username = req.body.username;
@@ -14,7 +14,7 @@ User.findOne({username:username}).then(user =>{
     const user = new User({
         username:username,
         password:hashpassword,
-        messages:{info:[]}
+
     })
     user.save().then(()=>{
         res.status(201).json({
@@ -31,24 +31,26 @@ User.findOne({username:username}).then(user =>{
 exports.login = (req, res, next)=>{
     const username = req.body.username;
     const password = req.body.password;
-
+    let loggedUser;
     User.findOne({username:username}).then(exist =>{
         if(!exist){
           return  res.status(401).json({error:"User does not exist"})
         }
-        bcrypt.compare(password, exist.password).then(domatch =>{
+        loggedUser = exist;
+        bcrypt.compare(password, loggedUser.password).then(domatch =>{
             if(!domatch){
 res.status(401).json({error:"Incorrect Password"})
             }
-            req.session.isAuthenticated = true;
-            req.session.isLoggedIn = true;
-            req.session.user = exist;
-            return req.session.save((err) => {
-              if (err) {
-                console.log(err);
-              }
-            res.status(201).json({message:"Logged in sucessfully"})
+            const token = jwt.sign({
+                username:loggedUser.username,
+                userId:loggedUser._id.toString()
+            },
+            'somesupersecret',
+            {
+                expiresIn: '24h'
+            }
+            );
+            res.status(200).json({token:token, userId: loggedUser._id.toString()});
         })
-        })
-    })
+        })    
 }

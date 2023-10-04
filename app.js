@@ -6,16 +6,17 @@ const authRoute = require('./routes/auth');
 const isAuth = require('./middlewares/auth')
 const mongoDbStore = require("connect-mongodb-session")(session);   
 const MONGODB_URI =
-  "mongodb+srv://Fidel_Wole:2ql24UoUi4uN5302@cluster0.cwzz5uc.mongodb.net/anonymous";
+  `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.cwzz5uc.mongodb.net/${process.env.MONGODB_DATABASE}`;
 const bodyparser = require('body-parser')
 const feedRoute = require('./routes/feed')
-const User = require('./model/user');
+const helmet = require('helmet'); 
 
 const store = new mongoDbStore({
   uri: MONGODB_URI,
   collection: "sessions",
 });
 
+app.use(helmet());
 app.use(bodyparser.json());
 
 app.use(
@@ -37,5 +38,5 @@ app.get('/authUser', isAuth, (req, res) => {
 app.use(feedRoute);
 app.use(authRoute);
 mongoose.connect(MONGODB_URI).then(()=>{
-    app.listen(8000);
+    app.listen(process.env.PORT || 8000);
 })

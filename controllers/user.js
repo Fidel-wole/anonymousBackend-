@@ -1,4 +1,5 @@
 const User = require("../model/user");
+const AnonymousType = require('../model/anonymousType');
 const Message = require("../model/messages")
 
 
@@ -36,6 +37,19 @@ exports.getUserMessage = (req, res, next) => {
     });
 };
 
+exports.getMessageDetails = (req, res)=>{
+  const userId = req.params.userId;
+  const anonymousId = req.params.anonymousId;
+  AnonymousType.findById(anonymousId).then((data)=>{
+if(!data){
+  res.status(404).json({message:'Not Found'})
+}
+res.json({data:data})
+  }).catch(err =>{
+    console.log(err)
+  }) 
+}
+
 exports.postMessages = (req, res, next) => {
   const userId = req.params.userId;
   const anonymousId = req.params.anonymousId;
@@ -52,3 +66,13 @@ messages.save().then(()=>{
   res.json({message:"Saved"})
 })
 };
+
+exports.deleteAllMessage = (req, res)=>{
+  const userId = req.userId;
+  Message.findByIdAndDelete({userId:userId})
+  .then((deleted)=>{
+    res.json({deleted})
+  }).catch((error)=>{
+
+  })
+}

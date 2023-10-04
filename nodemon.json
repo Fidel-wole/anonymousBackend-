@@ -1,0 +1,8 @@
+{
+    "env":{
+    "MONGODB_USER": "Fidel_Wole",
+    "MONGODB_PASSWORD": "2ql24UoUi4uN5302",
+    "MONGODB_DATABASE": "anonymous"
+}
+
+}

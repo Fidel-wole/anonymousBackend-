@@ -50,7 +50,7 @@ res.status(401).json({error:"Incorrect Password"})
                 expiresIn: '24h'
             }
             );
-            res.status(200).json({token:token, userId: loggedUser._id.toString()});
+            res.status(200).json({token:token, userId: loggedUser._id.toString(), username: loggedUser.username});
         })
         })    
 }

@@ -20,6 +20,8 @@ router.get('/messages', isAuth, messageController.getUserMessages);
 
 router.get('/message/:messageId', messageController.getUserMessage);
 
+router.get('/message/:anonymousId/:userId', messageController.getMessageDetails);
+
 router.post('/message/:anonymousId/:userId', messageController.postMessages);
 
 module.exports = router;

@@ -1,7 +1,7 @@
 if(process.env.NODE_ENV !== "productiono"){
   require('dotenv').config();
 }
-
+const cors = require('cors');
 const path = require('path');
 const express = require('express');
 const app = express();
@@ -23,6 +23,7 @@ const store = new mongoDbStore({
 
 mongoose.set('strictQuery', false);
 
+app.use(cors());
 app.use(bodyparser.json());
 app.use(express.static(path.join(__dirname, 'uploads')))
 app.use(

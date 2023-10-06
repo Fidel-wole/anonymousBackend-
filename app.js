@@ -1,3 +1,8 @@
+if(process.env.NODE_ENV !== "productiono"){
+  require('dotenv').config();
+}
+
+const path = require('path');
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -18,7 +23,7 @@ const store = new mongoDbStore({
 
 app.use(helmet());
 app.use(bodyparser.json());
-
+app.use(express.static(path.join(__dirname, 'uploads')))
 app.use(
   session({ secret: "my secret", resave: false, saveUninitialized: false, store:store })
 );
@@ -32,11 +37,14 @@ next();
 app.get('/authUser', isAuth, (req, res) => {
   // Access the userId from req.userId (provided by the isAuth middleware)
   const userId = req.userId;
+  const username = req.username;
   // Include userId in the response
-  res.json({ userId });
+  res.json({ userId, username });
 });
+
 app.use(feedRoute);
 app.use(authRoute);
-mongoose.connect(MONGODB_URI).then(()=>{
+mongoose.connect(MONGODB_URI)
+.then(()=>{
     app.listen(process.env.PORT || 8000);
 })

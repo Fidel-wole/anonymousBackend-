@@ -23,6 +23,7 @@ exports.getUserMessages = (req, res, next) => {
 
 exports.getUserMessage = (req, res, next) => {
   const messageId = req.params.messageId;
+
   Message.findById(messageId)
   .populate('anonymousId')
     .then(message => {
@@ -40,14 +41,20 @@ exports.getUserMessage = (req, res, next) => {
 exports.getMessageDetails = (req, res)=>{
   const userId = req.params.userId;
   const anonymousId = req.params.anonymousId;
-  AnonymousType.findById(anonymousId).then((data)=>{
-if(!data){
-  res.status(404).json({message:'Not Found'})
-}
-res.json({data:data})
-  }).catch(err =>{
-    console.log(err)
-  }) 
+  User.findById(userId).then(user =>{
+    if(!user){
+      res.status(404).json({error:"User does not exist"})
+    }
+    AnonymousType.findById(anonymousId).then((data)=>{
+      if(!data){
+        res.status(404).json({message:'Not Found'})
+      }
+      res.json({data:data})
+        }).catch(err =>{
+          console.log(err)
+        })
+  })
+  
 }
 
 exports.postMessages = (req, res, next) => {

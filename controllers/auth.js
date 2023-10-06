@@ -5,9 +5,6 @@ const jwt = require('jsonwebtoken')
 exports.registerUser = (req, res, next)=>{
 const username = req.body.username;
 const password = req.body.password;
-const image = req.body.filename;
-
-const avatar = image.path;
 User.findOne({username:username}).then(user =>{
     if(user){
        res.status(401).json({message:"Username already exist, please choose another one"}) 
@@ -17,7 +14,7 @@ User.findOne({username:username}).then(user =>{
     const user = new User({
         username:username,
         password:hashpassword,
-        filename:avatar
+
 
     })
     user.save().then(()=>{
@@ -25,7 +22,6 @@ User.findOne({username:username}).then(user =>{
             message: "User Sucessfully Created",
             details:{
                 username:username,
-                password:hashpassword
             }
         })
     })

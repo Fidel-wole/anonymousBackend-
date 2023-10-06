@@ -21,6 +21,8 @@ const store = new mongoDbStore({
   collection: "sessions",
 });
 
+mongoose.set('strictQuery', false);
+
 app.use(bodyparser.json());
 app.use(express.static(path.join(__dirname, 'uploads')))
 app.use(

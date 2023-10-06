@@ -14,14 +14,13 @@ const MONGODB_URI =
   `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.cwzz5uc.mongodb.net/${process.env.MONGODB_DATABASE}`;
 const bodyparser = require('body-parser')
 const feedRoute = require('./routes/feed')
-const helmet = require('helmet'); 
+// // const helmet = require('helmet'); 
 
 const store = new mongoDbStore({
   uri: MONGODB_URI,
   collection: "sessions",
 });
 
-app.use(helmet());
 app.use(bodyparser.json());
 app.use(express.static(path.join(__dirname, 'uploads')))
 app.use(

@@ -76,10 +76,21 @@ messages.save().then(()=>{
 
 exports.deleteAllMessage = (req, res)=>{
   const userId = req.userId;
-  Message.findByIdAndDelete({userId:userId})
+  Message.deleteMany({userId:userId})
   .then((deleted)=>{
     res.json({deleted})
   }).catch((error)=>{
+console.log(error)
+  })
+}
 
+exports.deleteSingleMessage = (req, res)=>{
+  const messageId = req.params.messageId;
+  Message.findByIdAndRemove(messageId)
+  .then((message)=>{
+    if(!message){
+      res.json({error:"Unable to delete message"})  
+    }
+    res.json({message:"Message deleted sucessfully"})
   })
 }

@@ -24,4 +24,7 @@ router.get('/message/:anonymousId/:userId', messageController.getMessageDetails)
 
 router.post('/message/:anonymousId/:userId', messageController.postMessages);
 
+router.post('/deletemessages', isAuth, messageController.deleteAllMessage);
+
+router.post('/deletemessage/:messageId', isAuth, messageController.deleteSingleMessage)
 module.exports = router;

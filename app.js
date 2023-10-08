@@ -14,6 +14,8 @@ const MONGODB_URI =
   `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.cwzz5uc.mongodb.net/${process.env.MONGODB_DATABASE}`;
 const bodyparser = require('body-parser')
 const feedRoute = require('./routes/feed')
+const cron = require('node-cron');
+const Message = require('./model/messages');
 // // const helmet = require('helmet'); 
 
 const store = new mongoDbStore({
@@ -46,6 +48,18 @@ app.get('/authUser', isAuth, (req, res) => {
 
 app.use(feedRoute);
 app.use(authRoute);
+
+cron.schedule('0 0 * * *', ()=>{
+const cutOffDate = new Date();
+cutOffDate.setHours(cutOffDate.getHours - 48);
+
+Message.deleteMany({createdAt: {$lt: cutOffDate}})
+.then(()=>{
+  res.json({message:" Sucessfully cleared messages older than 48 hours"})
+}).catch((err)=>{
+  res.json({err})
+})
+})
 mongoose.connect(MONGODB_URI)
 .then(()=>{
     app.listen(process.env.PORT || 8000);

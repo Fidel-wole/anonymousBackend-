@@ -2,6 +2,7 @@ const feedController = require('../controllers/feed');
 const messageController = require('../controllers/user')
 const isAuth = require('../middlewares/auth')
 const express = require('express');
+const cacheMiddleware = require('../middlewares/cacheMiddleware');
 const router = express.Router()
 
 router.get('/authUser', isAuth, (req, res) => {
@@ -12,15 +13,15 @@ router.get('/authUser', isAuth, (req, res) => {
     res.json({ userId });
   });
 
-router.get('/anonymous', isAuth, feedController.getAnonymousTypes);
+router.get('/anonymous', isAuth, cacheMiddleware, feedController.getAnonymousTypes);
 
 router.post('/anonymous', isAuth, feedController.postAnonymousTypes);
 
-router.get('/messages', isAuth, messageController.getUserMessages);
+router.get('/messages', isAuth, cacheMiddleware, messageController.getUserMessages);
 
-router.get('/message/:messageId', messageController.getUserMessage);
+router.get('/message/:messageId', cacheMiddleware, messageController.getUserMessage);
 
-router.get('/message/:anonymousId/:userId', messageController.getMessageDetails);
+router.get('/message/:anonymousId/:userId', cacheMiddleware, messageController.getMessageDetails);
 
 router.post('/message/:anonymousId/:userId', messageController.postMessages);
 

@@ -1,8 +1,6 @@
 const User = require("../model/user");
 const AnonymousType = require('../model/anonymousType');
-const Message = require("../model/messages");
-const redisClient = require('../redisConfig');
-
+const Message = require("../model/messages")
 
 exports.getUserMessages = (req, res, next) => {
   const userId = req.userId;
@@ -13,7 +11,6 @@ exports.getUserMessages = (req, res, next) => {
       if (!messages || messages.length === 0) {
         return res.status(404).json({ error: "No messages found for the user" });
       }
-      redisClient.setex(req.url, 86400, JSON.stringify(messages));
       res.json({ messages });
     })
     .catch(err => {
@@ -32,7 +29,6 @@ exports.getUserMessage = (req, res, next) => {
       if (!message) {
         return res.status(404).json({ message: 'Message not found' });
       }
-      redisClient.setex(req.url, 86400, JSON.stringify(message));
       res.json({ message });
     })
     .catch(err => {

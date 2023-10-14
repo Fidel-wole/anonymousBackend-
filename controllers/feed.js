@@ -1,5 +1,5 @@
 const anonymousTypes = require("../model/anonymousType");
-const redisClient = require('../redisConfig');
+
 exports.postAnonymousTypes = (req, res, next) => {
   const title = req.body.title;
   const description = req.body.description;
@@ -20,8 +20,6 @@ exports.postAnonymousTypes = (req, res, next) => {
 
 exports.getAnonymousTypes = (req, res, next) => {
   anonymousTypes.find().then((anonymous) => {
-
-    redisClient.setex(req.url, 86400, JSON.stringify(anonymous));
     res.status(201).json({
     anonymous
     });

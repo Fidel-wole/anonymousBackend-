@@ -1,5 +1,5 @@
 const anonymousTypes = require("../model/anonymousType");
-
+const cache = require('memory-cache');
 exports.postAnonymousTypes = (req, res, next) => {
   const title = req.body.title;
   const description = req.body.description;
@@ -19,9 +19,20 @@ exports.postAnonymousTypes = (req, res, next) => {
 };
 
 exports.getAnonymousTypes = (req, res, next) => {
-  anonymousTypes.find().then((anonymous) => {
-    res.status(201).json({
-    anonymous
+  const cacheKey = 'anonymousTypes';
+  const cachedata  = cache.get(cacheKey);
+
+  if(cachedata){
+    res.status(200).json(cachedData);
+  }else{
+    anonymousTypes.find().then((anonymous) => {
+      cache.get(cacheKey, {anonymous}, 60000)
+      res.status(201).json({
+      anonymous
+      });
+    }).catch(err =>{
+      res.status(500).json({error:'An error ocurred'})
     });
-  });
+  }
+
 };
